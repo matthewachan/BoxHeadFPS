@@ -10,6 +10,7 @@ public class WeaponsControl : MonoBehaviour {
 
     private Weapon[] m_Weapons;
     private Weapon m_CurrentWeapon;
+    private GameObject m_BulletSpawn;
     private UnityEngine.UI.Text m_WeaponText;
     private float m_CooldownTimestamp;
 
@@ -27,6 +28,10 @@ public class WeaponsControl : MonoBehaviour {
         m_CooldownTimestamp = Time.time + m_CurrentWeapon.GetFireRate();
         m_WeaponText = GameObject.Find("Weapon").GetComponent<UnityEngine.UI.Text>();
         m_WeaponText.text = m_CurrentWeapon.GetName() + ": " + m_CurrentWeapon.GetCurrentAmmo();
+
+
+
+        m_BulletSpawn = GameObject.Find("BulletSpawn");
     }
 
     public void UpdateInventory(string name) {
@@ -74,9 +79,8 @@ public class WeaponsControl : MonoBehaviour {
 
 
         // Bullet logic
-        GameObject spawn = GameObject.Find("BulletSpawn");
-        Rigidbody bullet = (Rigidbody)Instantiate(m_BulletPrefab, spawn.transform.position, spawn.transform.rotation);
-        bullet.velocity = spawn.transform.forward * m_BulletSpeed;
+        Rigidbody bullet = (Rigidbody)Instantiate(m_BulletPrefab, m_BulletSpawn.transform.position, m_BulletSpawn.transform.rotation);
+        bullet.velocity = m_BulletSpawn.transform.forward * m_BulletSpeed;
         Destroy(bullet, 2.0f);
     }
 

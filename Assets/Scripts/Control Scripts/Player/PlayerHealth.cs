@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour {
     [SerializeField] private RectTransform m_HealthBar;
-    //[SerializeField] private UnityStandardAssets.Characters.FirstPerson.FirstPersonController m_Player;
 
     private NotificationControl m_Notification;
     private GameObject m_Player;
@@ -45,11 +44,11 @@ public class PlayerHealth : MonoBehaviour {
         
         // Check character death state
         if (m_CurrentHealth <= 0) {
+            GameObject.Find("GameManager").GetComponent<GameManager>().IsGameOver(true);
             m_Notification.PostNotification("You have died!");
             m_Player.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().enabled = false;
             m_Player.GetComponent<WeaponsControl>().enabled = false;
         } else {
-            // currentHealth--;
             m_BarPos.Set(-m_BarWidth + (m_CurrentHealth * m_BarWidth / m_MaxHealth), 0, 0);
             m_HealthBar.localPosition = m_BarPos;
         }
