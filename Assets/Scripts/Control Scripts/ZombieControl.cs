@@ -5,14 +5,17 @@ using UnityEngine;
 public class ZombieControl : MonoBehaviour {
     private GameObject m_Player;
     private PlayerHealth m_PlayerHealth;
+    private MultiplierControl m_Multiplier;
+    private ScoreControl m_Scoreboard;
     private int m_CurrentHealth;
     private int m_MaxHealth;
     private int m_AttackDamage;
     private int m_TurnSpeed;
-    
+    private int m_BaseKillPts;
     private int m_MoveSpeed;
     private float m_AttackCooldown;
     private float m_KnockbackDist;
+    private float m_DisappearDelay;
     private bool m_CanAttack;
     private bool m_IsAlive;
     private bool m_IsLimp;
@@ -21,6 +24,8 @@ public class ZombieControl : MonoBehaviour {
 	void Start () {
         m_Player = GameObject.Find("Player");
         m_PlayerHealth = GameObject.Find("Health Bar").GetComponent<PlayerHealth>();
+        m_Multiplier = GameObject.Find("Multiplier").GetComponent<MultiplierControl>();
+        m_Scoreboard = GameObject.Find("Score").GetComponent<ScoreControl>();        
         m_IsAlive = true;
         m_IsLimp = false;
         m_MaxHealth = 100;
@@ -31,19 +36,31 @@ public class ZombieControl : MonoBehaviour {
         m_TurnSpeed = 1;
         m_MoveSpeed = 1;
         m_KnockbackDist = 1;
+        m_DisappearDelay = 2;
+        m_BaseKillPts = 100;
     }
 
     private void Update() {
         if (m_CurrentHealth <= 0) {
-            m_IsAlive = false;
-            m_CanAttack = false;
             if (!m_IsLimp) {
+
+                m_IsAlive = false;
+                m_CanAttack = false;
+
+                // Score keeping
+                m_Scoreboard.IncrementScore(m_BaseKillPts * m_Multiplier.GetMultiplier());
+                m_Multiplier.IncrementMultiplier();
+
+                // Enemy keels over
                 transform.Rotate(new Vector3(-90, 0));
                 m_IsLimp = true;
                 gameObject.GetComponent<CapsuleCollider>().enabled = false;
+
+                Destroy(gameObject, m_DisappearDelay);
             }
         }
     }
+
 
     void FixedUpdate() {
         if (m_IsAlive) {
@@ -74,7 +91,7 @@ public class ZombieControl : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision) {
         if (collision.collider.tag == "Bullet" && m_IsAlive) {
-            m_CurrentHealth -= m_Player.GetComponent<WeaponsControl>().getCurrentWeapon().getAttackDamage();
+            m_CurrentHealth -= m_Player.GetComponent<WeaponsControl>().GetCurrentWeapon().GetAttackDamage();
             Knockback();
             Debug.Log(m_CurrentHealth);
         }

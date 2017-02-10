@@ -21,45 +21,45 @@ public class Weapon : Component {
         m_AttackDamage = attack_damage;
     }
 
-    public void upgradeCapacity(int max_ammo) {
+    public void UpgradeCapacity(int max_ammo) {
         m_MaxAmmo = max_ammo;
     }
 
-    public void updateAmmo(int current_ammo) {
+    public void UpdateAmmo(int current_ammo) {
         m_CurrentAmmo = current_ammo;
     }
 
-    public void updateFireRate(float fire_rate) {
+    public void UpdateFireRate(float fire_rate) {
         m_FireRate = fire_rate;
     }
 
-    public void upgradeDamage(int attack_damage) {
+    public void UpgradeDamage(int attack_damage) {
         m_AttackDamage = attack_damage;
     }
 
 
     /* Accessors */
-    public string getName() {
+    public string GetName() {
         return m_Name;
     }
 
-    public bool isUnlocked() {
+    public bool IsUnlocked() {
         return m_Unlocked;
     }
 
-    public int getMaxAmmo() {
+    public int GetMaxAmmo() {
         return m_MaxAmmo;
     }
 
-    public int getCurrentAmmo() {
+    public int GetCurrentAmmo() {
         return m_CurrentAmmo;
     }
 
-    public int getAttackDamage() {
+    public int GetAttackDamage() {
         return m_AttackDamage;
     }
 
-    public float getFireRate() {
+    public float GetFireRate() {
         return m_FireRate;
     }
 
