@@ -11,18 +11,13 @@ public class DestroyFireball : MonoBehaviour {
 	}
 
     public void SetDamage(int damage) {
-
         m_BulletDamage = damage;
     }
 
     private void OnCollisionEnter(Collision collision) {
         if (collision.collider.name == "Player")
             GameObject.Find("Health Bar").GetComponent<PlayerHealth>().TakeDamage(m_BulletDamage);
-        else if (collision.collider.tag == "Bullet") {
-            // Bullets cannot collide with fireball
-            
-            return;
-        }
+
         Destroy(gameObject);
      }
  }
