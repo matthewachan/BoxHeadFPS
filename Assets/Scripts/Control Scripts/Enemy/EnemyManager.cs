@@ -61,7 +61,7 @@ public class EnemyManager : MonoBehaviour {
             m_BaseKillPts = 1000;
         }
         else {
-            GetComponent<BoxCollider>().size = new Vector3(1, 2, m_AttackRange);
+            GetComponent<BoxCollider>().size = new Vector3(1, .5f, m_AttackRange);
             m_BaseKillPts = 100;
         }
     }

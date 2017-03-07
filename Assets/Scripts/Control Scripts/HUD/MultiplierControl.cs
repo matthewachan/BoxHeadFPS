@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class MultiplierControl : MonoBehaviour {
     private UnityEngine.UI.Text m_MultiplierText;
+    private UnityEngine.UI.Image m_DotImg;
+    
+
 
     private int m_CurrentMultiplier;
     private int m_MinMultiplier;

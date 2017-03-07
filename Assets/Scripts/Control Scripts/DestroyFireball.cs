@@ -15,9 +15,10 @@ public class DestroyFireball : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision collision) {
-        if (collision.collider.name == "Player")
+        if (collision.collider.name == "Player") {
             GameObject.Find("Health Bar").GetComponent<PlayerHealth>().TakeDamage(m_BulletDamage);
-
+        }
         Destroy(gameObject);
-     }
- }
+
+    }
+}

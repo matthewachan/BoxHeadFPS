@@ -13,6 +13,8 @@ public class EnemyMovement : MonoBehaviour {
 
     }
 
+
+
     void FixedUpdate() {
         if (GetComponent<EnemyManager>().IsAlive() && !GameObject.Find("GameManager").GetComponent<GameManager>().IsGameOver() ) {
             // Follow player

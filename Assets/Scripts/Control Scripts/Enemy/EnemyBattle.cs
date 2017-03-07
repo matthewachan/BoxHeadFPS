@@ -6,6 +6,9 @@ public class EnemyBattle : MonoBehaviour {
     [SerializeField]
     private Rigidbody m_FireballPrefab;
 
+    private Animator m_Anim;
+    private int m_AttackHash;
+    private int m_DeadHash;
     private GameObject m_Player;
     private PlayerHealth m_PlayerHealth;
     private ScoreControl m_Scoreboard;
@@ -19,7 +22,9 @@ public class EnemyBattle : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
+        m_Anim = GetComponent<Animator>();
+        m_AttackHash = Animator.StringToHash("isAttacking");
+        m_DeadHash = Animator.StringToHash("isDead");
         m_Player = GameObject.Find("Player");
         m_PlayerHealth = GameObject.Find("Health Bar").GetComponent<PlayerHealth>();
         m_FireballSpawn = GameObject.Find("FireballSpawn");
@@ -42,6 +47,11 @@ public class EnemyBattle : MonoBehaviour {
             if (!m_IsLimp) {
 
                 GetComponent<EnemyManager>().IsAlive(false);
+
+                // Stop animating
+                m_Anim.SetBool(m_DeadHash, GetComponent<EnemyManager>().IsAlive());
+                m_Anim.Stop();
+
                 m_CanAttack = false;
 
                 // Score keeping
@@ -60,19 +70,20 @@ public class EnemyBattle : MonoBehaviour {
 
 
     void MeleeAttack() {
-        m_PlayerHealth.TakeDamage(GetComponent<EnemyManager>().GetAttackDamage());
+        // Update animator state machine
+        m_Anim.SetTrigger(m_AttackHash);
+        StartCoroutine(DelayedAttack());
         StartCoroutine(Cooldown());
+        // Reset state
+        
     }
 
 
     void ShootFireball() {
-        Rigidbody fireball = (Rigidbody)Instantiate(m_FireballPrefab, m_FireballSpawn.transform.position, m_FireballSpawn.transform.rotation);
-        fireball.GetComponent<DestroyFireball>().SetDamage(GetComponent<EnemyManager>().GetAttackDamage());
-        // Shoot fireball at player
-        fireball.rotation = Quaternion.Slerp(fireball.rotation, Quaternion.LookRotation(m_Player.transform.position, fireball.position), Time.deltaTime);
-        fireball.rotation = Quaternion.Euler(new Vector3(0f, fireball.rotation.eulerAngles.y, 0f));
-        fireball.velocity += fireball.transform.forward * m_FireballSpeed * Time.deltaTime;
+        // Animate fireball attack
+        m_Anim.SetTrigger(m_AttackHash);
 
+        StartCoroutine(DelayedFireball());
         StartCoroutine(Cooldown());
     }
 
@@ -87,10 +98,25 @@ public class EnemyBattle : MonoBehaviour {
         m_CanAttack = true;
     }
 
+    IEnumerator DelayedAttack() {
+        yield return new WaitForSeconds(.7f);
+        m_PlayerHealth.TakeDamage(GetComponent<EnemyManager>().GetAttackDamage());
+
+    }
+
+    IEnumerator DelayedFireball() {
+        yield return new WaitForSeconds(.8f);
+        Rigidbody fireball = (Rigidbody)Instantiate(m_FireballPrefab, m_FireballSpawn.transform.position, m_FireballSpawn.transform.rotation);
+        fireball.GetComponent<DestroyFireball>().SetDamage(GetComponent<EnemyManager>().GetAttackDamage());
+        // Shoot fireball at player
+        fireball.rotation = Quaternion.Slerp(fireball.rotation, Quaternion.LookRotation(m_Player.transform.position, fireball.position), Time.deltaTime);
+        fireball.rotation = Quaternion.Euler(new Vector3(0f, fireball.rotation.eulerAngles.y, 0f));
+        fireball.velocity += fireball.transform.forward * m_FireballSpeed * Time.deltaTime;
+    }
+
     private void OnTriggerStay(Collider player) {
-
         if (player.name == "Player" && m_CanAttack && !GameObject.Find("GameManager").GetComponent<GameManager>().IsGameOver()) {
-
+            
             if (GetComponent<EnemyManager>().IsDevil() == false)
                 MeleeAttack();
             else 
