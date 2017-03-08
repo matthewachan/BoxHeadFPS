@@ -62,6 +62,7 @@ public class EnemyBattle : MonoBehaviour {
                 transform.Rotate(new Vector3(-90, 0));
                 m_IsLimp = true;
                 gameObject.GetComponent<CapsuleCollider>().enabled = false;
+                gameObject.GetComponent<Rigidbody>().isKinematic = true;
 
                 Destroy(gameObject, m_DisappearDelay);
             }

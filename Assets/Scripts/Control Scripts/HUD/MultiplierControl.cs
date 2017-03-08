@@ -22,8 +22,8 @@ public class MultiplierControl : MonoBehaviour {
         m_MinMultiplier = 1;
         m_CurrentMultiplier = m_MinMultiplier;
 
+        // Grab components
         m_MultiplierText = gameObject.GetComponent<UnityEngine.UI.Text>();
-
         m_DotImg = GameObject.Find("Dot").GetComponent<UnityEngine.UI.Image>();
         m_DotPos = GameObject.Find("Dot").GetComponent<RectTransform>();
         m_Anim = GameObject.Find("Dot").GetComponent<Animation>();
@@ -37,8 +37,23 @@ public class MultiplierControl : MonoBehaviour {
 
 
         // Init multiplier at x1
-        UpdateMultiplier();
+        UpdateMultiplierText();
 	}
+
+
+    private void Update() {
+        if (!m_Anim.IsPlaying("RampDown") && m_CurrentMultiplier > 1) {
+            DecrementMultiplier();
+        }
+    }
+
+    private void AnimateSlider() {
+        // Playback speed linearly increases with respect to current multiplier
+        m_Anim.Stop();
+        m_Anim["RampDown"].speed = m_AnimSpeed * m_CurrentMultiplier / 10.5f;
+        m_Anim.Play();
+
+    }
 
     private void ResetSlider() {
         m_DotImg.color = Color.white;
@@ -48,28 +63,20 @@ public class MultiplierControl : MonoBehaviour {
     public void IncrementMultiplier() {
         ++m_CurrentMultiplier;
         AnimateSlider();
-        UpdateMultiplier();
-    }
-
-    private void AnimateSlider() {
-        m_Anim.Stop();
-        m_Anim["RampDown"].speed = m_AnimSpeed * m_CurrentMultiplier/10.5f;
-        m_Anim.Play();
-
+        UpdateMultiplierText();
     }
 
     public void DecrementMultiplier() {
-
         --m_CurrentMultiplier;
         ResetSlider();
         if (m_CurrentMultiplier > 1) { 
             
             AnimateSlider();
         }
-        UpdateMultiplier();
+        UpdateMultiplierText();
     }
 
-    void UpdateMultiplier() {
+    void UpdateMultiplierText() {
         m_MultiplierText.text = "x" + m_CurrentMultiplier;
     }
 
@@ -78,11 +85,4 @@ public class MultiplierControl : MonoBehaviour {
     }
 
 
-    private void Update() {
-        Debug.Log(m_Anim["RampDown"].speed);
-        if (!m_Anim.IsPlaying("RampDown") && m_CurrentMultiplier > 1) {
-            DecrementMultiplier();
-        }
-
-    }
 }

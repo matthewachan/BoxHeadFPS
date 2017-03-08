@@ -23,20 +23,31 @@ public class GameManager : MonoBehaviour {
         m_SpawnTimer = 15;
 
         m_EnemySpawn = GameObject.Find("EnemySpawn").GetComponent<Transform>();
-        m_Devil = SpawnEnemy(m_DevilPrefab, m_EnemySpawn);
-        m_Devil.Initialize(true, 20, 20, 10, 2, 2, .1f, 2.5f);
-        StartCoroutine(SpawnCooldown(m_SpawnTimer));
-        
-        SpawnEnemy(m_ZombiePrefab, m_EnemySpawn).Initialize(false, 10, 10, 1, 1, 1, .1f, 1);
 
 
-        m_LootBox = Instantiate(m_LootBoxPrefab, m_LootSpawn).GetComponent<Lootbox>();
+        StartCoroutine(SpawnWave(m_ZombiePrefab, 25, m_EnemySpawn.position, m_EnemySpawn.rotation, false, 50, 10, 1, 1, 1, .1f, 1));
+
+        m_LootBox = Instantiate(m_LootBoxPrefab, m_LootSpawn.position, m_LootSpawn.rotation).GetComponent<Lootbox>();
         m_LootBox.Initialize("UZI");
         
 	}
 
-    EnemyManager SpawnEnemy(GameObject prefab, Transform spawnLocation) {
-        return Instantiate(prefab, spawnLocation).GetComponent<EnemyManager>();
+    EnemyManager SpawnEnemy(GameObject prefab, Vector3 spawnLocation, Quaternion rotation, bool isDevil, int maxHP, int attackDamage, float attackRange, int moveSpeed, int turnSpeed, float knockbackDist, float attackCD) {
+        EnemyManager enemy = Instantiate(prefab, spawnLocation, rotation).GetComponent<EnemyManager>();
+        enemy.Initialize(isDevil, maxHP, attackDamage, attackRange, moveSpeed, turnSpeed, knockbackDist, attackCD);
+        StartCoroutine(SpawnCooldown(1));
+        return enemy;
+    }
+
+    IEnumerator SpawnWave(GameObject prefab, int number, Vector3 spawnLocation, Quaternion rotation, bool isDevil, int maxHP, int attackDamage, float attackRange, int moveSpeed, int turnSpeed, float knockbackDist, float attackCD) {
+        List<EnemyManager> enemies = new List<EnemyManager>();
+        
+        for (int i = 0; i < number; ++i) {
+            enemies.Add(SpawnEnemy(prefab, spawnLocation, rotation, isDevil, maxHP, attackDamage, attackRange, moveSpeed, turnSpeed, knockbackDist, attackCD));
+            yield return new WaitForSeconds(0.8f);
+        }
+
+        //return enemies;
     }
 
     private void Update() {
