@@ -42,12 +42,12 @@ public class WeaponsControl : MonoBehaviour {
         m_Weapons[1] = new global::Weapon("UZI", m_BulletPrefab, false, 100, 100, 10, .1f, 50, true);
         m_Weapons[2] = new global::Weapon("Shotgun", m_ShotgunBulletPrefab, false, 100, 100, 10, .1f, 50, true);
         m_Weapons[3] = new global::Weapon("Barrel", m_BarrelPrefab, true, 100, 100, 10, 2, 0, false);
-        m_Weapons[4] = new global::Weapon("Grenade", m_GrenadePrefab, false, 100, 100, 10, .1f, 10, true);
-        m_Weapons[5] = new global::Weapon("Fake Walls", m_FakeWallsPrefab, false, 100, 100, 2, .1f, 0, false);
+        m_Weapons[4] = new global::Weapon("Grenade", m_GrenadePrefab, true, 100, 100, 10, .1f, 10, true);
+        m_Weapons[5] = new global::Weapon("Fake Walls", m_FakeWallsPrefab, true, 100, 100, 2, 2, 0, false);
         m_Weapons[6] = new global::Weapon("Claymore", m_ClaymorePrefab, false, 100, 100, 10, 2, 0, false);
         m_Weapons[7] = new global::Weapon("Rocket", m_RocketPrefab, false, 100, 100, 10, .1f, 30, true);
         m_Weapons[8] = new global::Weapon("Chargepack", m_ChargepackPrefab, false, 100, 100, 10, 2, 0, false);
-        m_Weapons[9] = new global::Weapon("Railgun", m_RailgunPrefab, false, 100, 100, 10, .1f, 50, true);
+        m_Weapons[9] = new global::Weapon("Railgun", m_RailgunPrefab, true, 100, 100, 10, .1f, 50, true);
 
 
         // Setup HUD
