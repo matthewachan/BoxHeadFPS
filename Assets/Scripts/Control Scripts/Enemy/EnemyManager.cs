@@ -8,7 +8,7 @@ public class EnemyManager : MonoBehaviour {
     
 
     //private EnemyMovement m_Movement;
-    //private EnemyBattle m_Battle;
+    private EnemyBattle m_Battle;
     private GameObject m_Player;
     private PlayerHealth m_PlayerHealth;
 
@@ -39,7 +39,7 @@ public class EnemyManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         //m_Movement = GetComponent<EnemyMovement>();
-        //m_Battle = GetComponent<EnemyBattle>();
+        m_Battle = GetComponent<EnemyBattle>();
         m_IsAlive = true;
 	}
 
@@ -54,6 +54,10 @@ public class EnemyManager : MonoBehaviour {
         m_MaxHealth = maxHP;
         m_CurrentHealth = maxHP;
         m_AttackCooldown = attackCD;
+
+        // Set location for devil's fireballs to spawn
+
+
 
         // Update attack range
         if (m_IsDevil) {

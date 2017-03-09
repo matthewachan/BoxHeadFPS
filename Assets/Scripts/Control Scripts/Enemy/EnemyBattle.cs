@@ -13,13 +13,12 @@ public class EnemyBattle : MonoBehaviour {
     private PlayerHealth m_PlayerHealth;
     private ScoreControl m_Scoreboard;
     private MultiplierControl m_Multiplier;
-    private GameObject m_FireballSpawn;
+    private Transform m_FireballSpawn;
 
     private int m_FireballSpeed;
     private int m_DisappearDelay;
     private bool m_IsLimp;
     private bool m_CanAttack;
-
     // Use this for initialization
     void Start () {
         m_Anim = GetComponent<Animator>();
@@ -27,7 +26,6 @@ public class EnemyBattle : MonoBehaviour {
         m_DeadHash = Animator.StringToHash("isDead");
         m_Player = GameObject.Find("Player");
         m_PlayerHealth = GameObject.Find("Health Bar").GetComponent<PlayerHealth>();
-        m_FireballSpawn = GameObject.Find("FireballSpawn");
 
         m_Scoreboard = GameObject.Find("Score").GetComponent<ScoreControl>();
         m_Multiplier = GameObject.Find("Multiplier").GetComponent<MultiplierControl>();
@@ -63,12 +61,14 @@ public class EnemyBattle : MonoBehaviour {
                 m_IsLimp = true;
                 gameObject.GetComponent<CapsuleCollider>().enabled = false;
                 gameObject.GetComponent<Rigidbody>().isKinematic = true;
-
                 Destroy(gameObject, m_DisappearDelay);
             }
         }
     }
 
+    public void SetFireballSpawn(Transform transform) {
+        m_FireballSpawn = transform;
+    }
 
     void MeleeAttack() {
         // Update animator state machine
@@ -91,12 +91,16 @@ public class EnemyBattle : MonoBehaviour {
     void TakeDamage() {
         GetComponent<EnemyManager>().LoseHealth(m_Player.GetComponent<WeaponsControl>().GetCurrentWeapon().GetAttackDamage());
         GetComponent<EnemyMovement>().Knockback();
+
     }
 
+
+
     IEnumerator Cooldown() {
+
         m_CanAttack = false;
         yield return new WaitForSeconds(GetComponent<EnemyManager>().GetAttackCooldown());
-        m_CanAttack = true;
+            m_CanAttack = true;
     }
 
     IEnumerator DelayedAttack() {
@@ -107,7 +111,8 @@ public class EnemyBattle : MonoBehaviour {
 
     IEnumerator DelayedFireball() {
         yield return new WaitForSeconds(.8f);
-        Rigidbody fireball = (Rigidbody)Instantiate(m_FireballPrefab, m_FireballSpawn.transform.position, m_FireballSpawn.transform.rotation);
+        m_FireballSpawn = transform.GetChild(2);
+        Rigidbody fireball = (Rigidbody)Instantiate(m_FireballPrefab, m_FireballSpawn.position, m_FireballSpawn.rotation);
         fireball.GetComponent<DestroyFireball>().SetDamage(GetComponent<EnemyManager>().GetAttackDamage());
         // Shoot fireball at player
         fireball.rotation = Quaternion.Slerp(fireball.rotation, Quaternion.LookRotation(m_Player.transform.position, fireball.position), Time.deltaTime);

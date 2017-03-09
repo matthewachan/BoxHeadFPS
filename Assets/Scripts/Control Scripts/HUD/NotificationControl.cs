@@ -12,6 +12,10 @@ public class NotificationControl : MonoBehaviour {
 
 	}
 
+    public void ChangeTextColor(Color color) {
+        m_NotificationText.color = color;
+    }
+
     public void PostNotification(string text) {
         StartCoroutine(TimeoutNotification(text, 2));
     }
@@ -20,6 +24,8 @@ public class NotificationControl : MonoBehaviour {
         m_NotificationText.text = text;
         yield return new WaitForSeconds(time);
         m_NotificationText.text = "";
+        // Always reset notification text color to white 
+        m_NotificationText.color = Color.white;
     }
 	
 	// Update is called once per frame

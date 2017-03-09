@@ -8,43 +8,47 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private GameObject m_DevilPrefab;
     [SerializeField] private GameObject m_ZombiePrefab;
     private Transform m_EnemySpawn;
+    private Transform m_EnemySpawn2;
 
     private EnemyManager m_Devil;
     
     private Lootbox m_LootBox;
     private bool m_IsGameOver;
-    private bool m_CanSpawn;
-    private int m_SpawnTimer;
+    private float m_MinSpawnTime;
+    private float m_MaxSpawnTime;
 
 	// Use this for initialization
 	void Start () {
         m_IsGameOver = false;
-        m_CanSpawn = true;
-        m_SpawnTimer = 15;
+
+        m_MinSpawnTime = 1;
+        m_MaxSpawnTime = 5;
 
         m_EnemySpawn = GameObject.Find("EnemySpawn").GetComponent<Transform>();
+        m_EnemySpawn2 = GameObject.Find("EnemySpawn_2").GetComponent<Transform>();
 
-
-        StartCoroutine(SpawnWave(m_ZombiePrefab, 25, m_EnemySpawn.position, m_EnemySpawn.rotation, false, 50, 10, 1, 1, 1, .1f, 1));
+        StartCoroutine(SpawnWave(m_ZombiePrefab, 25, Random.Range(m_MinSpawnTime, m_MaxSpawnTime), m_EnemySpawn.position, m_EnemySpawn.rotation, false, 50, 10, 1, 1, 1, .6f, 1));
+        StartCoroutine(SpawnWave(m_DevilPrefab, 1, Random.Range(m_MinSpawnTime, m_MaxSpawnTime), m_EnemySpawn2.position, m_EnemySpawn2.rotation, true, 100, 20, 7, 2, 2, .6f, 2));
+        
 
         m_LootBox = Instantiate(m_LootBoxPrefab, m_LootSpawn.position, m_LootSpawn.rotation).GetComponent<Lootbox>();
         m_LootBox.Initialize("UZI");
+
         
 	}
 
     EnemyManager SpawnEnemy(GameObject prefab, Vector3 spawnLocation, Quaternion rotation, bool isDevil, int maxHP, int attackDamage, float attackRange, int moveSpeed, int turnSpeed, float knockbackDist, float attackCD) {
         EnemyManager enemy = Instantiate(prefab, spawnLocation, rotation).GetComponent<EnemyManager>();
         enemy.Initialize(isDevil, maxHP, attackDamage, attackRange, moveSpeed, turnSpeed, knockbackDist, attackCD);
-        StartCoroutine(SpawnCooldown(1));
         return enemy;
     }
 
-    IEnumerator SpawnWave(GameObject prefab, int number, Vector3 spawnLocation, Quaternion rotation, bool isDevil, int maxHP, int attackDamage, float attackRange, int moveSpeed, int turnSpeed, float knockbackDist, float attackCD) {
+    IEnumerator SpawnWave(GameObject prefab, int number, float spawnDelay, Vector3 spawnLocation, Quaternion rotation, bool isDevil, int maxHP, int attackDamage, float attackRange, int moveSpeed, int turnSpeed, float knockbackDist, float attackCD) {
         List<EnemyManager> enemies = new List<EnemyManager>();
         
         for (int i = 0; i < number; ++i) {
             enemies.Add(SpawnEnemy(prefab, spawnLocation, rotation, isDevil, maxHP, attackDamage, attackRange, moveSpeed, turnSpeed, knockbackDist, attackCD));
-            yield return new WaitForSeconds(0.8f);
+            yield return new WaitForSeconds(spawnDelay);
         }
 
         //return enemies;
@@ -54,13 +58,6 @@ public class GameManager : MonoBehaviour {
         // Pause game
         if (m_IsGameOver)
             Time.timeScale = 0;
-    }
-
-
-    IEnumerator SpawnCooldown(float delay) {
-        m_CanSpawn = false;
-        yield return new WaitForSeconds(delay);
-        m_CanSpawn = true;
     }
 
     public void IsGameOver(bool flag) {
