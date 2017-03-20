@@ -39,14 +39,14 @@ public class WeaponsControl : MonoBehaviour {
         // Create list of weapons
         m_Weapons = new Weapon[10];
         m_Weapons[0] = new global::Weapon("Pistol", m_BulletPrefab, true, 50, 50, 10, .2f, 50, true);
-        m_Weapons[1] = new global::Weapon("UZI", m_BulletPrefab, false, 100, 100, 10, .1f, 50, true);
-        m_Weapons[2] = new global::Weapon("Shotgun", m_ShotgunBulletPrefab, false, 100, 100, 10, .1f, 50, true);
+        m_Weapons[1] = new global::Weapon("UZI", m_BulletPrefab, true, 100, 100, 10, .1f, 50, true);
+        m_Weapons[2] = new global::Weapon("Shotgun", m_ShotgunBulletPrefab, true, 100, 100, 10, .1f, 50, true);
         m_Weapons[3] = new global::Weapon("Barrel", m_BarrelPrefab, true, 100, 100, 10, 2, 0, false);
-        m_Weapons[4] = new global::Weapon("Grenade", m_GrenadePrefab, true, 100, 100, 10, .1f, 10, true);
+        m_Weapons[4] = new global::Weapon("Grenade", m_GrenadePrefab, true, 100, 100, 10, 1f, 10, true);
         m_Weapons[5] = new global::Weapon("Fake Walls", m_FakeWallsPrefab, true, 100, 100, 2, 2, 0, false);
-        m_Weapons[6] = new global::Weapon("Claymore", m_ClaymorePrefab, false, 100, 100, 10, 2, 0, false);
-        m_Weapons[7] = new global::Weapon("Rocket", m_RocketPrefab, false, 100, 100, 10, .1f, 30, true);
-        m_Weapons[8] = new global::Weapon("Chargepack", m_ChargepackPrefab, false, 100, 100, 10, 2, 0, false);
+        m_Weapons[6] = new global::Weapon("Claymore", m_ClaymorePrefab, true, 100, 100, 10, 1, 0, false);
+        m_Weapons[7] = new global::Weapon("Rocket", m_RocketPrefab, true, 100, 100, 10, .5f, 30, true);
+        m_Weapons[8] = new global::Weapon("Chargepack", m_ChargepackPrefab, true, 100, 100, 10, 1, 0, false);
         m_Weapons[9] = new global::Weapon("Railgun", m_RailgunPrefab, true, 100, 100, 10, .1f, 50, true);
 
 
@@ -81,6 +81,12 @@ public class WeaponsControl : MonoBehaviour {
         }
     }
 
+    public string KeyToName(int key) {
+        return m_Weapons[key].GetName();
+    }
+
+
+
     public List<string> GetUnlockedWeapons() {
         List<string> unlockedWeapons = new List<string>();
         for (int i = 0; i < m_Weapons.Length; ++i) {
@@ -89,6 +95,7 @@ public class WeaponsControl : MonoBehaviour {
         }
         return unlockedWeapons;
     }
+
 
     public void UnlockNotification(string weapon, int key) {
         m_Notification.ChangeTextColor(Color.green);

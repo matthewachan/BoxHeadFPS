@@ -14,6 +14,7 @@ public class EnemyBattle : MonoBehaviour {
     private ScoreControl m_Scoreboard;
     private MultiplierControl m_Multiplier;
     private Transform m_FireballSpawn;
+    private GameManager m_GameManager;
 
     private int m_FireballSpeed;
     private int m_DisappearDelay;
@@ -29,6 +30,7 @@ public class EnemyBattle : MonoBehaviour {
 
         m_Scoreboard = GameObject.Find("Score").GetComponent<ScoreControl>();
         m_Multiplier = GameObject.Find("Multiplier").GetComponent<MultiplierControl>();
+        m_GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
 
         m_FireballSpeed = 150;
@@ -56,11 +58,22 @@ public class EnemyBattle : MonoBehaviour {
                 m_Scoreboard.IncrementScore(GetComponent<EnemyManager>().GetBaseKillPts() * m_Multiplier.GetMultiplier());
                 m_Multiplier.IncrementMultiplier();
 
+                // Disable physics
+                gameObject.GetComponent<CapsuleCollider>().enabled = false;
+                gameObject.GetComponent<Rigidbody>().isKinematic = true;
+
+                // Devil's have a chance to drop lootboxes
+                if (GetComponent<EnemyManager>().IsDevil() && Random.Range(1, 100) > 50) {
+                    Lootbox lootbox = m_GameManager.SpawnLootbox(transform.position + new Vector3(0, 0.1f, 0), transform.rotation);
+                    lootbox.SetRespawnable(false);
+                }
                 // Enemy keels over
                 transform.Rotate(new Vector3(-90, 0));
                 m_IsLimp = true;
-                gameObject.GetComponent<CapsuleCollider>().enabled = false;
-                gameObject.GetComponent<Rigidbody>().isKinematic = true;
+                
+
+                
+
                 Destroy(gameObject, m_DisappearDelay);
             }
         }

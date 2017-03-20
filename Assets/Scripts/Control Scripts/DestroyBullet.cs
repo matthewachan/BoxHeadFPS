@@ -8,9 +8,9 @@ public class DestroyBullet : MonoBehaviour {
 	}
 
 
-
     private void OnCollisionEnter(Collision collision) {
-        Destroy(gameObject);
+        if (collision.transform.name != "Player")
+            Destroy(gameObject);
     }
 
 }
