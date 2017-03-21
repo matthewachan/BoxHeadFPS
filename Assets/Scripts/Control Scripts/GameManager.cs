@@ -27,8 +27,8 @@ public class GameManager : MonoBehaviour {
         m_EnemySpawn = GameObject.Find("EnemySpawn").GetComponent<Transform>();
         m_EnemySpawn2 = GameObject.Find("EnemySpawn_2").GetComponent<Transform>();
 
-        StartCoroutine(SpawnWave(m_ZombiePrefab, 25, Random.Range(m_MinSpawnTime, m_MaxSpawnTime), m_EnemySpawn.position, m_EnemySpawn.rotation, false, 50, 10, 1, 1, 1, .6f, 1));
-        StartCoroutine(SpawnWave(m_DevilPrefab, 5, Random.Range(m_MinSpawnTime, m_MaxSpawnTime), m_EnemySpawn2.position, m_EnemySpawn2.rotation, true, 100, 20, 7, 2, 2, .6f, 2));
+        StartCoroutine(SpawnWave(m_ZombiePrefab, 25, Random.Range(m_MinSpawnTime, m_MaxSpawnTime), m_EnemySpawn.position, m_EnemySpawn.rotation, false, 30, 10, 1, 1, 1, .6f, 1));
+        StartCoroutine(SpawnWave(m_DevilPrefab, 5, Random.Range(m_MinSpawnTime, m_MaxSpawnTime), m_EnemySpawn2.position, m_EnemySpawn2.rotation, true, 30, 20, 7, 2, 2, .6f, 2));
         
 
         m_LootBox = Instantiate(m_LootBoxPrefab, m_LootSpawn.position, m_LootSpawn.rotation).GetComponent<Lootbox>();
