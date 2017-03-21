@@ -107,8 +107,14 @@ public class WeaponsControl : MonoBehaviour {
     }
 
     private void FixedUpdate() {
+        if (Input.GetButton("Fire1") && GetCurrentWeapon().GetName() == "Chargepack" && GameObject.Find("Chargepack(Clone)") != null && Time.time >= m_CooldownTimestamp) {
+            if (!GameObject.Find("Chargepack(Clone)").GetComponent<ExplosionControl>().HasExploded()) {
+                GameObject.Find("Chargepack(Clone)").GetComponent<ExplosionControl>().Explode();
+                m_CooldownTimestamp = Time.time + m_CurrentWeapon.GetFireRate();
+            }
+        }
         // Fire bullet
-        if (Input.GetButton("Fire1") && Time.time >= m_CooldownTimestamp && m_CurrentWeapon.GetCurrentAmmo() > 0) {
+        else if (Input.GetButton("Fire1") && Time.time >= m_CooldownTimestamp && m_CurrentWeapon.GetCurrentAmmo() > 0) {
             FireBullet();
             m_CooldownTimestamp = Time.time + m_CurrentWeapon.GetFireRate();
         }
@@ -120,49 +126,45 @@ public class WeaponsControl : MonoBehaviour {
 
         // Weapon cycling
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            if (m_Weapons[0].IsUnlocked())
-                m_CurrentWeapon = m_Weapons[0];
+            CycleWeapon(0);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            if (m_Weapons[1].IsUnlocked()) 
-                m_CurrentWeapon = m_Weapons[1];
+            CycleWeapon(1);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3)) {
-            if (m_Weapons[2].IsUnlocked())
-                m_CurrentWeapon = m_Weapons[2];
+            CycleWeapon(2);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4)) {
-            if (m_Weapons[3].IsUnlocked())
-                m_CurrentWeapon = m_Weapons[3];
+            CycleWeapon(3);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5)) {
-            if (m_Weapons[4].IsUnlocked())
-                m_CurrentWeapon = m_Weapons[4];
+            CycleWeapon(4);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6)) {
-            if (m_Weapons[5].IsUnlocked())
-                m_CurrentWeapon = m_Weapons[5];
+            CycleWeapon(5);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7)) {
-            if (m_Weapons[6].IsUnlocked())
-                m_CurrentWeapon = m_Weapons[6];
+            CycleWeapon(6);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha8)) {
-            if (m_Weapons[7].IsUnlocked())
-                m_CurrentWeapon = m_Weapons[7];
+            CycleWeapon(7);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9)) {
-            if (m_Weapons[8].IsUnlocked())
-                m_CurrentWeapon = m_Weapons[8];
+            CycleWeapon(8);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha0)) {
-            if (m_Weapons[9].IsUnlocked())
-                m_CurrentWeapon = m_Weapons[9];
+            CycleWeapon(9);
         }
-
         // Update HUD
         m_WeaponText.text = m_CurrentWeapon.GetName() + ": " + m_CurrentWeapon.GetCurrentAmmo();
 
+    }
+
+    private void CycleWeapon(int index) {
+        if (m_Weapons[index].IsUnlocked()) {
+            m_CurrentWeapon = m_Weapons[index];
+            m_CooldownTimestamp = Time.time;
+        }
     }
 
     private void FireBullet() {

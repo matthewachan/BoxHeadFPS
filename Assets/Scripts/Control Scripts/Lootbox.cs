@@ -30,7 +30,7 @@ public class Lootbox : MonoBehaviour {
         
         m_IsRespawnable = flag;
     }
-
+    
     private void OnTriggerEnter(Collider player) {
         if (player.name == "Player") {
             int length = m_WeaponsControl.GetUnlockedWeapons().Count;

@@ -26,4 +26,13 @@ public class Blinking : MonoBehaviour {
         Invoke("TurnOff", m_BlinkFreq);
     }
 
+    public void ActivateBomb() {
+        m_BlinkFreq = 0.1f;
+    }
+
+    public void StopBlinking() {
+        gameObject.GetComponentInChildren<Light>().enabled = false;
+        CancelInvoke();
+    }
+
 }
